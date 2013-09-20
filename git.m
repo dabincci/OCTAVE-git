@@ -1,88 +1,54 @@
 function git(varargin)
-% A thin MATLAB wrapper for Git.
-% 
-%   Short instructions:
-%       Use this exactly as you would use the OS command-line verison of Git.
-% 
-%   Long instructions are:
-%       This is not meant to be a comprehensive guide to the near-omnipotent 
-%       Git SCM:
-%           http://git-scm.com/documentation
-% 
-%       Common MATLAB workflow: 
-% 
-%       % Creates initial repository tracking all files under some root
-%       % folder
-%       >> cd ~/
-%       >> git init
+% git wrapper for gnu octave
+% stolen and modified from https://github.com/manur/MATLAB-git/
+% MIT Licence
 %
-%       % Shows changes made to all files in repo (none so far)
-%       >> git status
+% octave:1> git add git.m
 %
-%       % Create a new file and add some code
-%       >> edit foo.m
+% octave:2> git commit -m "test"
+% [master c3f9570] test
+%  1 file changed, 2 insertions(+), 3 deletions(-)
 %
-%       % Check repo status, after new file created
-%       >> git status
+% octave:3> git push origin master
+% Counting objects: 18, done.
+% Delta compression using up to 2 threads.
+% Compressing objects: 100% (15/15), done.
+% Writing objects: 100% (17/17), 4.70 KiB | 0 bytes/s, done.
+% Total 17 (delta 3), reused 0 (delta 0)
+% To https://github.com/markuman/octave-osuv.git
+%    a4dbff1..c3f9570  master -> master
 %
-%       % Stage/unstage files for commit
-%       >> git add foo.m          % Add file to repo or to stage
-%       >> git reset HEAD .       % To unstage your files from current commit area
+% octave:4>
 %
-%       % Commit your changes to a new branch, with comments
-%       >> git commit -m 'Created new file, foo.m'
-% 
-%       % Other useful commands (replace ellipses with appropriate args)
-%       >> git checkout ...       % To restore files to last commit
-%       >> git branch ...         % To create or move to another branch
-%       >> git diff ...           % See line-by-line changes 
-%
-%   Useful resources:
-%       1. GitX: A visual interface for Git on the OS X client
-%       2. Github.com: Remote hosting for Git repos
-%       3. Git on Wikipedia: Further reading 
-% 
-% v0.1,     27 October 2010 -- MR: Initial support for OS X & Linux,
-%                               untested on PCs, but expected to work
-% 
-% v0.2,     11 March 2011   -- TH: Support for PCs
-% 
-% v0.3,     12 March 2011   -- MR: Fixed man pages hang bug using redirection
-% 
-% Contributors: (MR) Manu Raghavan
-%               (TH) Timothy Hansell
-
-
 % Test to see if git is installed
 [status,~] = system('git --version');
 % if git is in the path this will return a status of 0
 % it will return a 1 only if the command is not found
 
-    if (status==1)
+    if (0<status)
         % If GIT Is NOT installed, then this should end the function.
-        fprintf('git is not installed\n%s\n',...
-               'Download it at http://git-scm.com/download');
+	% i bet this will not work on windows!!!!
+        if ispc
+	        fprintf('git is not installed\n Download it at http://git-scm.com/download');
+	elseif isunix
+		fprintf('Please installd git\n Arch Linux: sudo pacman -S git\n Debian (.deb based): sudo apt-get install git\n Fedora (.rpm based): sudo yum install git\n');
+	else fprintf('git is not installed\n Download it at http://git-scm.com/download');
+	endif
     else
         % Otherwise we can call the real git with the arguments
-        arguments = parse(varargin{:});  
+        arguments = parse(varargin{:});
         if ispc
           prog = '';
         else
           prog = ' | cat';
-        end
+        endif
         [~,result] = system(['git ',arguments,prog]);
 
-        % save current status of pagination, then turn it on
-        morestatus=get(0,'More');
-        more('on')
         % show result
         disp(result)
-        % revert pagination to previous status
-        more(morestatus)
-    end
-end
+    endif
+endfunction
 
-function space_delimited_list = parse(varargin)
-    space_delimited_list = cell2mat(...
-                cellfun(@(s)([s,' ']),varargin,'UniformOutput',false));
-end
+function sp = parse(varargin)
+    sp = cell2mat(cellfun(@(s)(['''',s,''' ']),varargin,'UniformOutput',false));
+endfunction
