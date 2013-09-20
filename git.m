@@ -1,7 +1,6 @@
 function git(varargin)
 % git wrapper for gnu octave
 % stolen and modified from https://github.com/manur/MATLAB-git/
-% MIT Licence
 %
 % octave:1> git add git.m
 %
