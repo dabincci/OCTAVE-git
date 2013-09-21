@@ -26,7 +26,6 @@ function git(varargin)
 
     if (0<status)
         % If GIT Is NOT installed, then this should end the function.
-	% i bet this will not work on windows!!!!
         if ispc
 	        fprintf('git is not installed\n Download it at http://git-scm.com/download');
 	elseif isunix
@@ -49,5 +48,9 @@ function git(varargin)
 endfunction
 
 function sp = parse(varargin)
-    sp = cell2mat(cellfun(@(s)(['''',s,''' ']),varargin,'UniformOutput',false));
+    if ispc
+	sp = cell2mat(cellfun(@(s)(["""",s,""" "]),varargin,'UniformOutput',false));
+    else
+	sp = cell2mat(cellfun(@(s)(['''',s,''' ']),varargin,'UniformOutput',false));
+    endif
 endfunction
