@@ -48,9 +48,5 @@ function git(varargin)
 endfunction
 
 function sp = parse(varargin)
-    if ispc
 	sp = cell2mat(cellfun(@(s)(["""",s,""" "]),varargin,'UniformOutput',false));
-    else
-	sp = cell2mat(cellfun(@(s)(['''',s,''' ']),varargin,'UniformOutput',false));
-    endif
 endfunction
